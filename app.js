@@ -1,9 +1,11 @@
 // eslint-disable-next-line
 require('dotenv').config();
+const helmet = require('helmet');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
 const { celebrate, Joi, errors } = require('celebrate');
 const users = require('./routes/users');
 const articles = require('./routes/article');
@@ -21,6 +23,15 @@ mongoose.connect('mongodb://localhost:27017/newsexplorerdb', {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
+app.use(limiter);
+
+app.use(helmet());
 
 app.use(cors());
 
