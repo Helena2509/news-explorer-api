@@ -4,7 +4,7 @@ const BadRequestError = require('../errors/BadRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
 const getArticle = (req, res, next) => {
-  const datatArticles = Article.find({})
+  const datatArticles = Article.find({owner: req.user._id})
     .then((articles) => {
       const articlesRevers = articles.reverse();
       res.status(200).send(articlesRevers);
